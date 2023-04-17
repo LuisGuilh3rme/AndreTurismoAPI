@@ -52,5 +52,19 @@ namespace Turismo.Services
 
             return Convert.ToInt32(insert.ExecuteScalar());
         }
+
+        public int InserirPassagem(Passagem passagem)
+        {
+            string insertString = "INSERT INTO Passagem (Origem, Destino, Id_Cliente, Data, Valor) VALUES (@Org, @Dest, @IdCliente, @Data, @Valor); SELECT CAST(scope_identity() AS INT)";
+            SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
+
+            insert.Parameters.Add(new SqlParameter("@Org", InserirEndereco(passagem.Origem)));
+            insert.Parameters.Add(new SqlParameter("@Dest", InserirEndereco(passagem.Destino)));
+            insert.Parameters.Add(new SqlParameter("@IdCliente", InserirCliente(passagem.Cliente)));
+            insert.Parameters.Add(new SqlParameter("@Data", passagem.Data));
+            insert.Parameters.Add(new SqlParameter("@Valor", passagem.Valor));
+
+            return Convert.ToInt32(insert.ExecuteScalar());
+        }
     }
 }
