@@ -9,6 +9,6 @@ namespace Turismo.Models
     internal class Cidade
     {
         public int Id { get; set; }
-        public string Descricao { get; set; }
+        public string Nome { get; set; }
     }
 }
