@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using System.Globalization;
 using Turismo.Models;
 
 namespace Turismo.Services
@@ -63,6 +64,19 @@ namespace Turismo.Services
             insert.Parameters.Add(new SqlParameter("@IdCliente", InserirCliente(passagem.Cliente)));
             insert.Parameters.Add(new SqlParameter("@Data", passagem.Data));
             insert.Parameters.Add(new SqlParameter("@Valor", passagem.Valor));
+
+            return Convert.ToInt32(insert.ExecuteScalar());
+        }
+
+        public int InserirHotel(Hotel hotel)
+        {
+            string insertString = "INSERT INTO Hotel (Nome, Id_Endereco, Data_Cadastro, Valor) VALUES (@Nome, @IdEndereco, @Cadastro, @Valor); SELECT CAST(scope_identity() AS INT)";
+            SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
+
+            insert.Parameters.Add(new SqlParameter("@Nome", hotel.Nome));
+            insert.Parameters.Add(new SqlParameter("@IdEndereco", InserirEndereco(hotel.Endereco)));
+            insert.Parameters.Add(new SqlParameter("@Cadastro", hotel.DataCadastro));
+            insert.Parameters.Add(new SqlParameter("@Valor", hotel.Valor));
 
             return Convert.ToInt32(insert.ExecuteScalar());
         }
