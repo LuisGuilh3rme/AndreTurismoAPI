@@ -26,7 +26,7 @@ namespace Turismo.Services
 
         public int InserirEndereco (Endereco endereco)
         {
-            string insertString = "INSERT INTO Endereco (Lodragouro, Numero, Bairro, CEP, Complemento, Cidade, Data_Cadastro) VALUES (@Lgdro, @Nmro, @Bairro, @CEP, @Cpmento, @Cidade, @Data); SELECT CAST(scope_identity() AS INT)";
+            string insertString = "INSERT INTO Endereco (Lodragouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (@Lgdro, @Nmro, @Bairro, @CEP, @Cpmento, @IdCidade, @Data); SELECT CAST(scope_identity() AS INT)";
             SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
 
             insert.Parameters.Add(new SqlParameter("@Lgdro", endereco.Logradouro));
@@ -34,8 +34,21 @@ namespace Turismo.Services
             insert.Parameters.Add(new SqlParameter("@Bairro", endereco.Bairro));
             insert.Parameters.Add(new SqlParameter("@CEP", endereco.CEP));
             insert.Parameters.Add(new SqlParameter("@Cpmento", endereco.Complemento));
-            insert.Parameters.Add(new SqlParameter("@Cidade", InserirCidade(endereco.Cidade)));
+            insert.Parameters.Add(new SqlParameter("@IdCidade", InserirCidade(endereco.Cidade)));
             insert.Parameters.Add(new SqlParameter("@Data", endereco.DataCadastro));
+
+            return Convert.ToInt32(insert.ExecuteScalar());
+        }
+
+        public int InserirCliente (Cliente cliente)
+        {
+            string insertString = "INSERT INTO Cliente (Nome, Telefone, Id_Endereco, Data_Cadastro) VALUES (@Nome, @Telefone, @IdEndereco, @Cadastro); SELECT CAST(scope_identity() AS INT)";
+            SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
+
+            insert.Parameters.Add(new SqlParameter("@Nome", cliente.Nome));
+            insert.Parameters.Add(new SqlParameter("@Telefone", cliente.Telefone));
+            insert.Parameters.Add(new SqlParameter("@IdEndereco", InserirEndereco(cliente.Endereco)));
+            insert.Parameters.Add(new SqlParameter("@Cadastro", cliente.DataCadastro));
 
             return Convert.ToInt32(insert.ExecuteScalar());
         }
