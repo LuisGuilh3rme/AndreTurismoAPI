@@ -58,7 +58,7 @@ namespace Turismo.Services
 
         public int InserirPassagem(Passagem passagem)
         {
-            string insertString = "INSERT INTO Passagem (Origem, Destino, Id_Cliente, Data, Valor) VALUES (@Org, @Dest, @IdCliente, @Data, @Valor); SELECT CAST(scope_identity() AS INT)";
+            string insertString = "INSERT INTO Passagem (Id_Origem, Id_Destino, Id_Cliente, Data, Valor) VALUES (@Org, @Dest, @IdCliente, @Data, @Valor); SELECT CAST(scope_identity() AS INT)";
             SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
 
             insert.Parameters.Add(new SqlParameter("@Org", InserirEndereco(passagem.Origem)));
@@ -211,6 +211,29 @@ namespace Turismo.Services
             }
 
             return cliente;
+        }
+
+        public Passagem RetornarPassagem (int id)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT Id, Id_Origem, Id_Destino, Id_Cliente, Data, Valor FROM Passagem WHERE Id = " + id);
+
+            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
+            SqlDataReader dr = select.ExecuteReader();
+
+            Passagem passagem = new Passagem();
+
+            if (dr.Read())
+            {
+                passagem.Id = Convert.ToInt32(dr["Id"]);
+                passagem.Origem = RetornarEndereco(Convert.ToInt32(dr["Id_Origem"]));
+                passagem.Destino = RetornarEndereco(Convert.ToInt32(dr["Id_Destino"]));
+                passagem.Cliente = RetornarCliente(Convert.ToInt32(dr["Id_Cliente"]));
+                passagem.Data = DateTime.Parse(dr["Data"].ToString());
+                passagem.Valor = Convert.ToDecimal(dr["Valor"]);
+            }
+
+            return passagem;
         }
     }
 }
