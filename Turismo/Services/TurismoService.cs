@@ -97,34 +97,32 @@ namespace Turismo.Services
             return Convert.ToInt32(insert.ExecuteScalar());
         }
 
-        /*public List<Pacote> ListarPacotes()
+        public List<Pacote> ListarPacotes()
         {
             List<Pacote> pacotes = new List<Pacote>();
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT a.Id, a.Name, a.PassagersNumber, a.Description, e.Description AS \"Engine_Description\" FROM Airplane a, Engine e WHERE a.Id_Engine = e.Id");
+            sb.Append("SELECT Id, Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente FROM Pacotes WHERE a.Id_Engine = e.Id");
 
             SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
             SqlDataReader dr = select.ExecuteReader();
 
             while (dr.Read())
             {
-                Pacote airplane = new Pacote();
+                Pacote pacote = new Pacote();
 
-                airplane.Id = Convert.ToInt32(dr["Id"]);
-                airplane.Name = Convert.ToString(dr["Name"])!;
-                airplane.PassagersNumber = Convert.ToInt32(dr["PassagersNumber"]);
-                airplane.Description = Convert.ToString(dr["Description"])!;
-                airplane.Engine = new Engine
-                {
-                    Id = Convert.ToInt32(dr["Id"]),
-                    Description = Convert.ToString(dr["Engine_Description"])!
-                };
-                airplanes.Add(airplane);
+                pacote.Id = Convert.ToInt32(dr["Id"]);
+                pacote.Hotel = RetornarHotel(Convert.ToInt32(dr["Id_Hotel"]));
+                pacote.Passagem = RetornarPassagem(Convert.ToInt32(dr["Id_Passagem"]));
+                pacote.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
+                pacote.Valor = Convert.ToDecimal(dr["Valor"]);
+                pacote.Cliente = RetornarCliente(Convert.ToInt32(dr["Id_Cliente"]));
+
+                pacotes.Add(pacote);
             }
 
-            return airplanes;
-        }*/
+            return pacotes;
+        }
 
         public Hotel RetornarHotel(int id)
         {
