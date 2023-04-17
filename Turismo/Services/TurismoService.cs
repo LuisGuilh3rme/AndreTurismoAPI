@@ -190,5 +190,27 @@ namespace Turismo.Services
 
             return cidade;
         }
+
+        public Cliente RetornarCliente(int id)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("SELECT Id, Nome, Telefone, Endereco, Data_Cadastro FROM Cliente WHERE Id = " + id);
+
+            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
+            SqlDataReader dr = select.ExecuteReader();
+
+            Cliente cliente = new Cliente();
+
+            if (dr.Read())
+            {
+                cliente.Id = Convert.ToInt32(dr["Id"]);
+                cliente.Nome = Convert.ToString(dr["Nome"]);
+                cliente.Telefone = Convert.ToString(dr["Telefone"]);
+                cliente.Endereco = RetornarEndereco(Convert.ToInt32(dr["Id_Endereco"]));
+                cliente.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
+            }
+
+            return cliente;
+        }
     }
 }
