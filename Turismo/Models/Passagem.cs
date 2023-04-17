@@ -8,6 +8,7 @@ namespace Turismo.Models
 {
     internal class Passagem
     {
+        public int Id { get; set; }
         public Endereco Origem { get; set; }
         public Endereco Destino { get; set; }
         public Cliente Cliente { get; set; }
