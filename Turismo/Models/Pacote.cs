@@ -1,4 +1,6 @@
-﻿namespace Turismo.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Turismo.Models
 {
     internal class Pacote
     {

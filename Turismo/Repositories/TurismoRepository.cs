@@ -22,47 +22,77 @@ namespace Turismo.Repositories
 
         public int InserirCidade(Cidade cidade)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Cidade () VALUES (");
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.ExecuteScalar(Cidade.INSERT, cidade);
 
             return Convert.ToInt32(db.ExecuteScalar(Cidade.INSERT, cidade));
         }
 
         public int InserirEndereco(Endereco endereco)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Endereco (Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (");
+            sb.Append($"'{endereco.Logradouro}', ");
+            sb.Append($"'{endereco.Numero}', ");
+            sb.Append($"'{endereco.Bairro}', ");
+            sb.Append($"'{endereco.CEP}', ");
+            sb.Append($"'{endereco.Complemento}', ");
+            sb.Append($"'{InserirCidade(endereco.Cidade)}', ");
+            sb.Append($"'{endereco.DataCadastro.ToString("MM/dd/yyyy")}');");
+            sb.Append("SELECT ()");
+
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.ExecuteScalar(Endereco.INSERT, endereco);
-
-            return Convert.ToInt32(db.ExecuteScalar(Endereco.INSERT, endereco));
+            Console.WriteLine(sb.ToString());
+            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
         }
 
         public int InserirCliente(Cliente cliente)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Cliente (Nome, Telefone, Id_Endereco, Data_Cadastro) VALUES (");
+            sb.Append($"'{cliente.Nome}', ");
+            sb.Append($"'{cliente.Telefone}', ");
+            sb.Append($"'{InserirEndereco(cliente.Endereco)}', ");
+            sb.Append($"'{cliente.DataCadastro.ToString("MM/dd/yyyy")}')");
+
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.ExecuteScalar(Cliente.INSERT, cliente);
 
-            return Convert.ToInt32(db.ExecuteScalar(Endereco.INSERT, cliente));
+            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
         }
 
         public int InserirPassagem(Passagem passagem)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Passagem (Id_Origem, Id_Destino, Id_Cliente, Data, Valor) VALUES (");
+            sb.Append($"'{InserirEndereco(passagem.Origem)}', ");
+            sb.Append($"'{InserirEndereco(passagem.Destino)}', ");
+            sb.Append($"'{InserirCliente(passagem.Cliente)}', ");
+            sb.Append($"'{passagem.Data.ToString("MM/dd/yyyy")}', ");
+            sb.Append($"'{passagem.Valor}')");
+
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.ExecuteScalar(Passagem.INSERT, passagem);
 
-            return Convert.ToInt32(db.ExecuteScalar(Passagem.INSERT, passagem));
+            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
         }
 
         public int InserirHotel(Hotel hotel)
         {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Hotel (Nome, Id_Endereco, Data_Cadastro, Valor) VALUES (");
+            sb.Append($"'{hotel.Nome}', ");
+            sb.Append($"'{InserirEndereco(hotel.Endereco)}', ");
+            sb.Append($"'{hotel.DataCadastro.ToString("MM/dd/yyyy")}', ");
+            sb.Append($"'{hotel.Valor}')");
+
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.ExecuteScalar(Hotel.INSERT, hotel);
 
-            return Convert.ToInt32(db.ExecuteScalar(Hotel.INSERT, hotel));
+            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
         }
 
         public void AtualizarCampo(int id, string tabela, string campo, string atualizarString)
@@ -71,8 +101,9 @@ namespace Turismo.Repositories
 
             sb.Append($"UPDATE {tabela} SET {campo} = '{atualizarString}' WHERE Id = {id}");
 
-            SqlCommand update = new SqlCommand(sb.ToString(), SQLConnection);
-            update.ExecuteNonQuery();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+            db.Execute(sb.ToString());
         }
 
         public void RemoverPacote(int id)
@@ -80,24 +111,26 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append($"DELETE FROM Pacote WHERE Id = {id}");
 
-            SqlCommand delete = new SqlCommand(sb.ToString(), SQLConnection);
-            delete.ExecuteNonQuery();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+            db.Execute(sb.ToString());
         }
 
         public void Inserir(Pacote pacote)
         {
-            string insertString = "INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Id_Cliente, Valor) VALUES (@IdHotel, @IdPassagem, @Cadastro, @IdCliente, @Valor);";
-            SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
+            StringBuilder sb = new StringBuilder();
+            sb.Append("INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente) VALUES ");
+            sb.Append($"'{InserirHotel(pacote.Hotel)}', ");
+            sb.Append($"'{InserirPassagem(pacote.Passagem)}', ");
+            sb.Append($"'{pacote.DataCadastro}', ");
+            sb.Append($"'{pacote.Valor}', ");
+            sb.Append($"'{InserirCliente(pacote.Cliente)}')");
 
-            insert.Parameters.Add(new SqlParameter("@IdHotel", InserirHotel(pacote.Hotel)));
-            insert.Parameters.Add(new SqlParameter("@IdPassagem", InserirPassagem(pacote.Passagem)));
-            insert.Parameters.Add(new SqlParameter("@Cadastro", pacote.DataCadastro));
-            insert.Parameters.Add(new SqlParameter("@IdCliente", InserirCliente(pacote.Cliente)));
-            insert.Parameters.Add(new SqlParameter("@Valor", pacote.Valor));
-
-            insert.ExecuteNonQuery();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+            db.Execute(sb.ToString(), pacote);
         }
-
+        /*
         public bool ExecutarDataReader(ref SqlDataReader dr, SqlCommand select, List<Pacote> pacotes)
         {
             int tamanho = pacotes.Count;
@@ -270,5 +303,6 @@ namespace Turismo.Repositories
 
             return passagem;
         }
+        */
     }
 }

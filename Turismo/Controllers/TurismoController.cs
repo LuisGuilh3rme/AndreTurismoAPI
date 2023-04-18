@@ -17,7 +17,8 @@ namespace Turismo.Controllers
 
         public List<Pacote> FindAll()
         {
-            return new TurismoService().ListarPacotes();
+            // return new TurismoService().ListarPacotes();
+            return null;
         }
     }
 }
