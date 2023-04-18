@@ -84,6 +84,15 @@ namespace Turismo.Services
             return Convert.ToInt32(insert.ExecuteScalar());
         }
 
+        public void AtualizarHotel(int id, string campo, string atualizacao)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"UPDATE Hotel SET {campo} = '{atualizacao}' WHERE Id = {id}");
+
+            SqlCommand update = new SqlCommand(sb.ToString(), SQLConnection);
+            update.ExecuteNonQuery();
+        }
+
         public void Inserir(Pacote pacote)
         {
             string insertString = "INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Id_Cliente, Valor) VALUES (@IdHotel, @IdPassagem, @Cadastro, @IdCliente, @Valor);";
