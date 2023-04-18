@@ -31,7 +31,8 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
-            return Convert.ToInt32(db.ExecuteScalar(sb.ToString(), cidade));
+            int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            return id;
         }
 
         public int InserirEndereco(Endereco endereco)
@@ -49,7 +50,9 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+
+            int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            return id;
         }
 
         public int InserirCliente(Cliente cliente)
@@ -65,7 +68,8 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
-            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            return id;
         }
 
         public int InserirPassagem(Passagem passagem)
@@ -82,7 +86,8 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
-            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            return id;
         }
 
         public int InserirHotel(Hotel hotel)
@@ -97,7 +102,8 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
-            return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            return id;
         }
 
         public void AtualizarCampo(int id, string tabela, string campo, string atualizarString)
@@ -109,6 +115,7 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
             db.Execute(sb.ToString());
+            db.Close();
         }
 
         public void RemoverPacote(int id)
@@ -119,6 +126,7 @@ namespace Turismo.Repositories
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
             db.Execute(sb.ToString());
+            db.Close();
         }
 
         public void Inserir(Pacote pacote)
@@ -133,6 +141,8 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
+            db.Close();
+
             db.Execute(sb.ToString());
         }
         public List<Pacote> FindAll()
@@ -165,6 +175,8 @@ namespace Turismo.Repositories
                 pacotes.Add(pacote);
             }
             dr.Close();
+            db.Close();
+
             return pacotes;
         }
 
@@ -191,6 +203,7 @@ namespace Turismo.Repositories
                 hotel.Endereco = RetornarEndereco(idEndereco);
             }
             dr.Close();
+            db.Close();
 
             return hotel;
         }
@@ -221,6 +234,7 @@ namespace Turismo.Repositories
                 endereco.Cidade = RetornarCidade(idCidade);
             }
             dr.Close();
+            db.Close();
 
             return endereco;
         }
@@ -243,6 +257,7 @@ namespace Turismo.Repositories
                 cidade.Nome = Convert.ToString(dr["Nome"]);
             }
             dr.Close();
+            db.Close();
 
             return cidade;
         }
@@ -270,6 +285,7 @@ namespace Turismo.Repositories
                 cliente.Endereco = RetornarEndereco(idEndereco);
             }
             dr.Close();
+            db.Close();
 
             return cliente;
         }
@@ -299,7 +315,8 @@ namespace Turismo.Repositories
                 passagem.Destino = RetornarEndereco(idDestino);
                 passagem.Cliente = RetornarCliente(idCliente);
             }
-                dr.Close();
+            dr.Close();
+            db.Close();
 
             return passagem;
         }
