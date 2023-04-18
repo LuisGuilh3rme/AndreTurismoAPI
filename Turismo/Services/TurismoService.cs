@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Globalization;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Text;
 using Turismo.Models;
 
@@ -29,7 +30,7 @@ namespace Turismo.Services
 
         public int InserirEndereco(Endereco endereco)
         {
-            string insertString = "INSERT INTO Endereco (Lodragouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (@Lgdro, @Nmro, @Bairro, @CEP, @Cpmento, @IdCidade, @Data); SELECT CAST(scope_identity() AS INT)";
+            string insertString = "INSERT INTO Endereco (Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (@Lgdro, @Nmro, @Bairro, @CEP, @Cpmento, @IdCidade, @Data); SELECT CAST(scope_identity() AS INT)";
             SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
 
             insert.Parameters.Add(new SqlParameter("@Lgdro", endereco.Logradouro));
@@ -83,9 +84,9 @@ namespace Turismo.Services
             return Convert.ToInt32(insert.ExecuteScalar());
         }
 
-        public int Inserir(Pacote pacote)
+        public void Inserir(Pacote pacote)
         {
-            string insertString = "INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Id_Cliente, Valor) VALUES (@IdHotel, @IdPassagem, @Cadastro, @IdCliente, @Valor); SELECT CAST(scope_identity() AS INT)";
+            string insertString = "INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Id_Cliente, Valor) VALUES (@IdHotel, @IdPassagem, @Cadastro, @IdCliente, @Valor);";
             SqlCommand insert = new SqlCommand(@insertString, SQLConnection);
 
             insert.Parameters.Add(new SqlParameter("@IdHotel", InserirHotel(pacote.Hotel)));
@@ -94,33 +95,53 @@ namespace Turismo.Services
             insert.Parameters.Add(new SqlParameter("@IdCliente", InserirCliente(pacote.Cliente)));
             insert.Parameters.Add(new SqlParameter("@Valor", pacote.Valor));
 
-            return Convert.ToInt32(insert.ExecuteScalar());
+            insert.ExecuteNonQuery();
         }
+
+        public bool ExecutarDataReader(ref SqlDataReader dr, SqlCommand select, List<Pacote> pacotes)
+        {
+            int tamanho = pacotes.Count;
+            if (dr.IsClosed) dr = select.ExecuteReader();
+            int contador = 0;
+
+            while (contador < tamanho)
+            {
+                dr.Read();
+                contador++;
+            }
+
+            return dr.Read();
+        } 
 
         public List<Pacote> ListarPacotes()
         {
             List<Pacote> pacotes = new List<Pacote>();
 
             StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT Id, Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente FROM Pacotes WHERE a.Id_Engine = e.Id");
+            sb.Append("SELECT Id, Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente FROM Pacote");
 
             SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
             SqlDataReader dr = select.ExecuteReader();
 
-            while (dr.Read())
+            while (ExecutarDataReader(ref dr, select, pacotes))
             {
                 Pacote pacote = new Pacote();
 
                 pacote.Id = Convert.ToInt32(dr["Id"]);
-                pacote.Hotel = RetornarHotel(Convert.ToInt32(dr["Id_Hotel"]));
-                pacote.Passagem = RetornarPassagem(Convert.ToInt32(dr["Id_Passagem"]));
                 pacote.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
                 pacote.Valor = Convert.ToDecimal(dr["Valor"]);
-                pacote.Cliente = RetornarCliente(Convert.ToInt32(dr["Id_Cliente"]));
+
+                int idCliente = Convert.ToInt32(dr["Id_Cliente"]);
+                int idPassagem = Convert.ToInt32(dr["Id_Passagem"]);
+                int idHotel = Convert.ToInt32(dr["Id_Hotel"]);
+                dr.Close();
+                pacote.Hotel = RetornarHotel(idHotel);
+                pacote.Passagem = RetornarPassagem(idPassagem);
+                pacote.Cliente = RetornarCliente(idCliente);
 
                 pacotes.Add(pacote);
             }
-
+            dr.Close();
             return pacotes;
         }
 
@@ -138,9 +159,12 @@ namespace Turismo.Services
             {
                 hotel.Id = Convert.ToInt32(dr["Id"]);
                 hotel.Nome = Convert.ToString(dr["Nome"]);
-                hotel.Endereco = RetornarEndereco(Convert.ToInt32(dr["Id_Endereco"]));
                 hotel.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
                 hotel.Valor = Convert.ToDecimal(dr["Valor"]);
+
+                int idEndereco = Convert.ToInt32(dr["Id_Endereco"]);
+                dr.Close();
+                hotel.Endereco = RetornarEndereco(idEndereco);
             }
 
             return hotel;
@@ -160,11 +184,15 @@ namespace Turismo.Services
             {
                 endereco.Id = Convert.ToInt32(dr["Id"]);
                 endereco.Logradouro = Convert.ToString(dr["Logradouro"]);
+                endereco.Numero = Convert.ToInt32(dr["Numero"]);
                 endereco.Bairro = Convert.ToString(dr["Bairro"]);
                 endereco.CEP = Convert.ToString(dr["CEP"]);
                 endereco.Complemento = Convert.ToString(dr["Complemento"]);
-                endereco.Cidade = RetornarCidade(Convert.ToInt32(dr["Id_Cidade"]));
                 endereco.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
+
+                int idCidade = Convert.ToInt32(dr["Id_Cidade"]);
+                dr.Close();
+                endereco.Cidade = RetornarCidade(idCidade);
             }
 
             return endereco;
@@ -185,6 +213,7 @@ namespace Turismo.Services
                 cidade.Id = Convert.ToInt32(dr["Id"]);
                 cidade.Nome = Convert.ToString(dr["Nome"]);
             }
+            dr.Close();
 
             return cidade;
         }
@@ -192,7 +221,7 @@ namespace Turismo.Services
         public Cliente RetornarCliente(int id)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("SELECT Id, Nome, Telefone, Endereco, Data_Cadastro FROM Cliente WHERE Id = " + id);
+            sb.Append("SELECT Id, Nome, Telefone, Id_Endereco, Data_Cadastro FROM Cliente WHERE Id = " + id);
 
             SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
             SqlDataReader dr = select.ExecuteReader();
@@ -204,8 +233,11 @@ namespace Turismo.Services
                 cliente.Id = Convert.ToInt32(dr["Id"]);
                 cliente.Nome = Convert.ToString(dr["Nome"]);
                 cliente.Telefone = Convert.ToString(dr["Telefone"]);
-                cliente.Endereco = RetornarEndereco(Convert.ToInt32(dr["Id_Endereco"]));
                 cliente.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
+
+                int idEndereco = Convert.ToInt32(dr["Id_Endereco"]);
+                dr.Close();
+                cliente.Endereco = RetornarEndereco(idEndereco);
             }
 
             return cliente;
@@ -224,11 +256,16 @@ namespace Turismo.Services
             if (dr.Read())
             {
                 passagem.Id = Convert.ToInt32(dr["Id"]);
-                passagem.Origem = RetornarEndereco(Convert.ToInt32(dr["Id_Origem"]));
-                passagem.Destino = RetornarEndereco(Convert.ToInt32(dr["Id_Destino"]));
-                passagem.Cliente = RetornarCliente(Convert.ToInt32(dr["Id_Cliente"]));
                 passagem.Data = DateTime.Parse(dr["Data"].ToString());
                 passagem.Valor = Convert.ToDecimal(dr["Valor"]);
+
+                int idOrigem = Convert.ToInt32(dr["Id_Origem"]);
+                int idDestino = Convert.ToInt32(dr["Id_Destino"]);
+                int idCliente = Convert.ToInt32(dr["Id_Cliente"]);
+                dr.Close();
+                passagem.Origem = RetornarEndereco(idOrigem);
+                passagem.Destino = RetornarEndereco(idDestino);
+                passagem.Cliente = RetornarCliente(idCliente);
             }
 
             return passagem;

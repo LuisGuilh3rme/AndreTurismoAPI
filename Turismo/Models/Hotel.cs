@@ -9,5 +9,10 @@ namespace Turismo.Models
         public Endereco Endereco { get; set; }
         public DateTime DataCadastro { get; set; }
         public decimal Valor { get; set; }
+
+        public override string ToString()
+        {
+            return $"\n Nome do hotel: {Nome} \n Endereço Hotel: {Endereco} \n Valor: {Valor}";
+        }
     }
 }
