@@ -9,22 +9,18 @@ internal class Program
     {
         int opt = Menu();
 
-        while (opt != 4)
+        while (opt != 5)
         {
             switch (opt)
             {
                 case 1: CadastrarPacote(); break;
                 case 2:
-                    int count = 0;
-                    new TurismoController().FindAll().ForEach(pacote =>
-                    {
-                        Console.WriteLine("*****************");
-                        Console.WriteLine("PACOTE NÚMERO: " + ++count);
-                        Console.WriteLine(pacote.ToString());
-                        Console.WriteLine();
-                    });
+                    List<Pacote> pacotes = new TurismoController().FindAll();
+                    ImprimirPacotes(pacotes);
                     break;
+
                 case 3: AtualizarRegistros(); break;
+                case 4: RemoverPacote(); break;
             }
 
             Console.WriteLine("**ENTER para continuar**");
@@ -39,9 +35,24 @@ internal class Program
         Console.WriteLine("1 - Adicionar pacotes");
         Console.WriteLine("2 - Listar pacotes");
         Console.WriteLine("3 - Atualizar tabelas");
-        Console.WriteLine("4 - Sair");
+        Console.WriteLine("4 - Apagar pacotes");
+        Console.WriteLine("5 - Sair");
         int opt = int.Parse(Console.ReadLine());
         return opt;
+    }
+
+    private static void ImprimirPacotes(List<Pacote> pacotes)
+    {
+        ConsoleColor aux = Console.ForegroundColor;
+        for (int i = 0; i < pacotes.Count; i++)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("**REGISTRO {0}**", i + 1);
+            Console.ForegroundColor = aux;
+
+            Console.WriteLine(pacotes[i].ToString());
+            Console.WriteLine();
+        }
     }
 
     private static void CadastrarPacote()
@@ -133,22 +144,28 @@ internal class Program
         List<Pacote> pacotes = new TurismoController().FindAll();
         bool verificador = true;
 
-        ConsoleColor aux = Console.ForegroundColor;
-        for (int i = 0; i < pacotes.Count; i++)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("**REGISTRO {0}**", i + 1);
-            Console.ForegroundColor = aux;
-
-            Console.WriteLine(pacotes[i].ToString());
-            Console.WriteLine();
-        }
+        ImprimirPacotes(pacotes);
         Console.Write("Escolha o registro: ");
         int index = int.Parse(Console.ReadLine()) - 1;
         verificador = EncontrarIndex(pacotes.Count, index);
         if (!verificador) { return; }
 
         AtualizarPacote(pacotes[index]);
+    }
+
+    private static void RemoverPacote()
+    {
+        Console.Clear();
+        List<Pacote> pacotes = new TurismoController().FindAll();
+        bool verificador = true;
+
+        ImprimirPacotes(pacotes);
+        Console.Write("Escolha o registro: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+        verificador = EncontrarIndex(pacotes.Count, index);
+        if (!verificador) { return; }
+
+        new TurismoService().RemoverPacote(pacotes[index].Id);
     }
 
     private static bool AtualizarPacote(Pacote pacote)
@@ -419,9 +436,10 @@ internal class Program
     {
         if (index < 0 || index > tam - 1)
         {
+            ConsoleColor aux = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Index inválido");
-            Console.WriteLine("ENTER para voltar");
-            Console.ReadLine();
+            Console.ForegroundColor = aux;
             return false;
         }
         return true;

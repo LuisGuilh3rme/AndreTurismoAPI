@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Globalization;
 using System.Net;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
 using Turismo.Models;
@@ -9,13 +10,9 @@ namespace Turismo.Services
 {
     internal class TurismoService
     {
-        readonly string stringConnection = @"Server=(localdb)\MSSQLLocalDB; Integrated Security=true; AttachDbFileName=C:\Database\17-04\turismo.mdf;";
-        readonly SqlConnection SQLConnection;
 
         public TurismoService()
         {
-            SQLConnection = new SqlConnection(stringConnection);
-            SQLConnection.Open();
         }
 
         public int InserirCidade(Cidade cidade)
@@ -92,6 +89,15 @@ namespace Turismo.Services
 
             SqlCommand update = new SqlCommand(sb.ToString(), SQLConnection);
             update.ExecuteNonQuery();
+        }
+
+        public void RemoverPacote(int id)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"DELETE FROM Pacote WHERE Id = {id}");
+
+            SqlCommand delete = new SqlCommand(sb.ToString(), SQLConnection);
+            delete.ExecuteNonQuery();
         }
 
         public void Inserir(Pacote pacote)

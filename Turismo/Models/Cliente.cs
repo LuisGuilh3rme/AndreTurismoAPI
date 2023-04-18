@@ -8,6 +8,8 @@ namespace Turismo.Models
 {
     internal class Cliente
     {
+        public readonly static string INSERT = "INSERT INTO Cliente (Nome, Telefone, Id_Endereco, Data_Cadastro) VALUES (@Nome, @Telefone, @Id_Endereco, @Data_Cadastro)";
+        public readonly static string GETALL = "SELECT * FROM Cliente";
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Telefone { get; set; }

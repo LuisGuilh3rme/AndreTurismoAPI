@@ -8,6 +8,8 @@ namespace Turismo.Models
 {
     internal class Endereco
     {
+        public readonly static string INSERT = "INSERT INTO Endereco (Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (@Logradouro, @Numero, @Bairro, @CEP, @Complemento, @Id_Cidade, @Data_Cadastro)";
+        public readonly static string GETALL = "SELECT * FROM Endereco";
         public int Id { get; set; }
         public string Logradouro { get; set; }
         public int Numero { get; set; }
