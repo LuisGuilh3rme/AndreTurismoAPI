@@ -84,10 +84,11 @@ namespace Turismo.Services
             return Convert.ToInt32(insert.ExecuteScalar());
         }
 
-        public void AtualizarHotel(int id, string campo, string atualizacao)
+        public void AtualizarCampo(int id, string tabela, string campo, string atualizarString)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append($"UPDATE Hotel SET {campo} = '{atualizacao}' WHERE Id = {id}");
+
+            sb.Append($"UPDATE {tabela} SET {campo} = '{atualizarString}' WHERE Id = {id}");
 
             SqlCommand update = new SqlCommand(sb.ToString(), SQLConnection);
             update.ExecuteNonQuery();
@@ -120,7 +121,7 @@ namespace Turismo.Services
             }
 
             return dr.Read();
-        } 
+        }
 
         public List<Pacote> ListarPacotes()
         {
@@ -179,7 +180,7 @@ namespace Turismo.Services
             return hotel;
         }
 
-        public Endereco RetornarEndereco (int id)
+        public Endereco RetornarEndereco(int id)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro FROM Endereco WHERE Id = " + id);
@@ -207,7 +208,7 @@ namespace Turismo.Services
             return endereco;
         }
 
-        public Cidade RetornarCidade (int id)
+        public Cidade RetornarCidade(int id)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Nome FROM Cidade WHERE Id = " + id);
@@ -252,7 +253,7 @@ namespace Turismo.Services
             return cliente;
         }
 
-        public Passagem RetornarPassagem (int id)
+        public Passagem RetornarPassagem(int id)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Id_Origem, Id_Destino, Id_Cliente, Data, Valor FROM Passagem WHERE Id = " + id);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Text;
-using System.Windows.Markup;
+﻿using System.Text;
 using Turismo.Controllers;
 using Turismo.Models;
 using Turismo.Services;
@@ -152,55 +148,260 @@ internal class Program
         verificador = EncontrarIndex(pacotes.Count, index);
         if (!verificador) { return; }
 
-        Console.Clear();
-        Console.WriteLine(" Registro escolhido: ");
-        Console.WriteLine(pacotes[index].ToString());
-
-        string[] tabelaPacote = { "Hotel", "Passagem", "DataCadastro", "Valor", "Cliente" };
-        ImprimirPropriedades(tabelaPacote);
-        Console.Write(" Escolha o index: ");
-        int indexPacote = int.Parse(Console.ReadLine()) - 1;
-        verificador = EncontrarIndex(tabelaPacote.Length, indexPacote);
-        if (!verificador) { return; }
-
-        switch (indexPacote)
-        {
-            case 0: if (!AtualizarHotel(pacotes[index].Hotel)) return; break;
-        }
+        AtualizarPacote(pacotes[index]);
     }
 
-    private static bool AtualizarHotel(Hotel hotel)
+    private static bool AtualizarPacote(Pacote pacote)
     {
         Console.Clear();
-        Console.WriteLine(hotel.ToString());
-        string[] tabela = { "Nome", "Endereco", "DataCadastro", "Valor" };
+        Console.WriteLine(pacote.ToString());
+        string[] tabela = { "Hotel", "Passagem", "DataCadastro", "Valor", "Cliente" };
 
         ImprimirPropriedades(tabela);
         Console.Write("Escolha o index: ");
         int index = int.Parse(Console.ReadLine()) - 1;
 
         bool verificador = EncontrarIndex(tabela.Length, index);
+        bool ehString = true;
         if (!verificador) return false;
 
         Console.Clear();
-        string atualizacao = String.Empty;
+        switch (index)
+        {
+            case 0:
+                AtualizarHotel(pacote.Hotel);
+                ehString = false;
+                break;
+
+            case 1:
+                AtualizarPassagem(pacote.Passagem);
+                ehString = false;
+                break;
+
+            case 2:
+                Console.WriteLine("Atual: " + pacote.DataCadastro);
+                Console.WriteLine("Atualizar data de cadastro: ");
+                break;
+
+            case 3:
+                Console.WriteLine("Atual: " + pacote.Valor);
+                Console.WriteLine("Atualizar data de cadastro: ");
+                break;
+
+            case 4:
+                AtualizarCliente(pacote.Cliente);
+                ehString = false;
+                break;
+        }
+
+        if (ehString)
+        {
+            string atualizacao = Console.ReadLine();
+            new TurismoService().AtualizarCampo(pacote.Id, "Pacote", tabela[index], atualizacao);
+        }
+        return true;
+    }
+
+    private static bool AtualizarCliente(Cliente cliente)
+    {
+        Console.Clear();
+        Console.WriteLine(cliente.ToString());
+        string[] tabela = { "Nome", "Telefone", "Endereco", "Data_Cadastro" };
+
+        ImprimirPropriedades(tabela);
+        Console.Write("Escolha o index: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+
+        bool verificador = EncontrarIndex(tabela.Length, index);
+        bool ehString = true;
+        if (!verificador) return false;
+
+        Console.Clear();
+        switch (index)
+        {
+            case 0:
+                Console.WriteLine("Atual: " + cliente.Nome);
+                Console.WriteLine("Atualizar nome: ");
+                break;
+
+            case 1:
+                Console.WriteLine("Atual: " + cliente.Telefone);
+                Console.WriteLine("Atualizar telefone: ");
+                break;
+
+            case 2:
+                AtualizarEndereco(cliente.Endereco);
+                ehString = false;
+                break;
+
+            case 3:
+                Console.WriteLine("Atual: " + cliente.DataCadastro);
+                Console.WriteLine("Atualizar data de cadastro: ");
+                break;
+        }
+
+        if (ehString)
+        {
+            string atualizacao = Console.ReadLine();
+            new TurismoService().AtualizarCampo(cliente.Id, "Cliente", tabela[index], atualizacao);
+        }
+        return true;
+    }
+
+    private static bool AtualizarPassagem(Passagem passagem)
+    {
+        Console.Clear();
+        Console.WriteLine(passagem.ToString());
+        string[] tabela = { "Endereco_Origem", "Endereco_Destino", "Cliente", "Data", "Valor" };
+
+        ImprimirPropriedades(tabela);
+        Console.Write("Escolha o index: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+
+        bool verificador = EncontrarIndex(tabela.Length, index);
+        bool ehString = true;
+        if (!verificador) return false;
+
+        Console.Clear();
+        switch (index)
+        {
+            case 0:
+                AtualizarEndereco(passagem.Origem);
+                ehString = false;
+                break;
+
+            case 1:
+                AtualizarEndereco(passagem.Origem);
+                ehString = false;
+                break;
+
+            case 2:
+                AtualizarCliente(passagem.Cliente);
+                ehString = false;
+                break;
+
+            case 3:
+                Console.WriteLine("Atual: " + passagem.Data);
+                Console.WriteLine("Atualizar data de viagem: ");
+                break;
+
+            case 4:
+                Console.WriteLine("Atual: " + passagem.Valor);
+                Console.WriteLine("Atualizar valor: ");
+                break;
+
+        }
+
+        if (ehString)
+        {
+            string atualizacao = Console.ReadLine();
+            new TurismoService().AtualizarCampo(passagem.Id, "Passagem", tabela[index], atualizacao);
+        }
+        return true;
+    }
+
+    private static bool AtualizarHotel(Hotel hotel)
+    {
+        Console.Clear();
+        Console.WriteLine(hotel.ToString());
+        string[] tabela = { "Nome", "Endereco", "Data_Cadastro", "Valor" };
+
+        ImprimirPropriedades(tabela);
+        Console.Write("Escolha o index: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+
+        bool verificador = EncontrarIndex(tabela.Length, index);
+        bool ehString = true;
+        if (!verificador) return false;
+
+        Console.Clear();
         switch (index)
         {
             case 0:
                 Console.WriteLine("Atual: " + hotel.Nome);
-                Console.WriteLine("Novo nome: ");
-                atualizacao = Console.ReadLine();
-                new TurismoService().AtualizarHotel(hotel.Id, tabela[index], atualizacao);
+                Console.WriteLine("Atualizar nome: ");
+                break;
+
+            case 1:
+                AtualizarEndereco(hotel.Endereco);
+                ehString = false;
+                break;
+
+            case 2:
+                Console.WriteLine("Atual: " + hotel.DataCadastro);
+                Console.WriteLine("Atualizar Valor: ");
                 break;
 
             case 3:
                 Console.WriteLine("Atual: " + hotel.Valor);
                 Console.WriteLine("Atualizar Valor: ");
-                atualizacao = DateTime.Parse(Console.ReadLine()).ToShortDateString();
-                new TurismoService().AtualizarHotel(hotel.Id, tabela[index], atualizacao);
+                break;
+
+        }
+
+        if (ehString)
+        {
+            string atualizacao = Console.ReadLine();
+            new TurismoService().AtualizarCampo(hotel.Id, "Hotel", tabela[index], atualizacao);
+        }
+        return true;
+    }
+
+    private static bool AtualizarEndereco(Endereco endereco)
+    {
+        Console.Clear();
+        Console.WriteLine(endereco.ToString());
+        string[] tabela = { "Logradouro", "Numero", "Bairro", "CEP", "Complemento", "Cidade", "Data_Cadastro" };
+
+        ImprimirPropriedades(tabela);
+        Console.Write("Escolha o index: ");
+        int index = int.Parse(Console.ReadLine()) - 1;
+
+        bool verificador = EncontrarIndex(tabela.Length, index);
+        bool ehString = true;
+        if (!verificador) return false;
+
+        Console.Clear();
+        switch (index)
+        {
+            case 0:
+                Console.WriteLine("Atual: " + endereco.Logradouro);
+                Console.WriteLine("Atualizar rua: ");
+                break;
+
+            case 1:
+                Console.WriteLine("Atual: " + endereco.Numero);
+                Console.WriteLine("Atualizar numero da casa: ");
+                break;
+
+            case 2:
+                Console.WriteLine("Atual: " + endereco.Bairro);
+                Console.WriteLine("Atualizar Bairro: ");
+                break;
+
+            case 3:
+                Console.WriteLine("Atual: " + endereco.CEP);
+                Console.WriteLine("Atualizar CEP: ");
+                break;
+
+            case 4:
+                Console.WriteLine("Atual: " + endereco.Complemento);
+                Console.WriteLine("Atualizar Complemento: ");
+                break;
+
+            case 5:
+                Console.WriteLine("Atual: " + endereco.Cidade);
+                Console.WriteLine("Atualizar Complemento: ");
+                break;
+
+            case 6:
+                Console.WriteLine("Atual: " + endereco.DataCadastro);
+                Console.WriteLine("Atualizar Data de cadastro: ");
                 break;
         }
 
+        string atualizacao = Console.ReadLine();
+        new TurismoService().AtualizarCampo(endereco.Id, "Endereco", tabela[index], atualizacao);
         return true;
     }
 
