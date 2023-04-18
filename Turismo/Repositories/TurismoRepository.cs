@@ -135,22 +135,6 @@ namespace Turismo.Repositories
             db.Open();
             db.Execute(sb.ToString());
         }
-        
-        public bool ExecutarDataReader(ref IDataReader dr, SqlConnection db, StringBuilder sb, List<Pacote> pacotes)
-        {
-            int tamanho = pacotes.Count;
-            if (dr.IsClosed) dr = db.ExecuteReader(sb.ToString());
-            int contador = 0;
-
-            while (contador < tamanho)
-            {
-                dr.Read();
-                contador++;
-            }
-
-            return dr.Read();
-        }
-
         public List<Pacote> FindAll()
         {
             List<Pacote> pacotes = new List<Pacote>();
@@ -163,7 +147,7 @@ namespace Turismo.Repositories
 
             IDataReader dr = db.ExecuteReader(sb.ToString());
 
-            while (ExecutarDataReader(ref dr, db, sb, pacotes))
+            while (dr.Read())
             {
                 Pacote pacote = new Pacote();
 
@@ -174,7 +158,6 @@ namespace Turismo.Repositories
                 int idCliente = Convert.ToInt32(dr["Id_Cliente"]);
                 int idPassagem = Convert.ToInt32(dr["Id_Passagem"]);
                 int idHotel = Convert.ToInt32(dr["Id_Hotel"]);
-                dr.Close();
                 pacote.Hotel = RetornarHotel(idHotel);
                 pacote.Passagem = RetornarPassagem(idPassagem);
                 pacote.Cliente = RetornarCliente(idCliente);
@@ -205,9 +188,9 @@ namespace Turismo.Repositories
                 hotel.Valor = Convert.ToDecimal(dr["Valor"]);
 
                 int idEndereco = Convert.ToInt32(dr["Id_Endereco"]);
-                dr.Close();
                 hotel.Endereco = RetornarEndereco(idEndereco);
             }
+            dr.Close();
 
             return hotel;
         }
@@ -235,9 +218,9 @@ namespace Turismo.Repositories
                 endereco.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
 
                 int idCidade = Convert.ToInt32(dr["Id_Cidade"]);
-                dr.Close();
                 endereco.Cidade = RetornarCidade(idCidade);
             }
+            dr.Close();
 
             return endereco;
         }
@@ -284,9 +267,9 @@ namespace Turismo.Repositories
                 cliente.DataCadastro = DateTime.Parse(dr["Data_Cadastro"].ToString());
 
                 int idEndereco = Convert.ToInt32(dr["Id_Endereco"]);
-                dr.Close();
                 cliente.Endereco = RetornarEndereco(idEndereco);
             }
+            dr.Close();
 
             return cliente;
         }
@@ -312,14 +295,14 @@ namespace Turismo.Repositories
                 int idOrigem = Convert.ToInt32(dr["Id_Origem"]);
                 int idDestino = Convert.ToInt32(dr["Id_Destino"]);
                 int idCliente = Convert.ToInt32(dr["Id_Cliente"]);
-                dr.Close();
                 passagem.Origem = RetornarEndereco(idOrigem);
                 passagem.Destino = RetornarEndereco(idDestino);
                 passagem.Cliente = RetornarCliente(idCliente);
             }
+                dr.Close();
 
             return passagem;
         }
-        
+
     }
 }
