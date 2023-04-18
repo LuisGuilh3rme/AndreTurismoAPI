@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,11 +24,13 @@ namespace Turismo.Repositories
         public int InserirCidade(Cidade cidade)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO Cidade () VALUES (");
+            sb.Append($"INSERT INTO Cidade (Nome) VALUES ('{cidade.Nome}');");
+            sb.Append("SELECT CAST(scope_identity() AS INT)");
+
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
-            return Convert.ToInt32(db.ExecuteScalar(Cidade.INSERT, cidade));
+            return Convert.ToInt32(db.ExecuteScalar(sb.ToString(), cidade));
         }
 
         public int InserirEndereco(Endereco endereco)
@@ -35,17 +38,16 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO Endereco (Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro) VALUES (");
             sb.Append($"'{endereco.Logradouro}', ");
-            sb.Append($"'{endereco.Numero}', ");
+            sb.Append($"{endereco.Numero}, ");
             sb.Append($"'{endereco.Bairro}', ");
             sb.Append($"'{endereco.CEP}', ");
             sb.Append($"'{endereco.Complemento}', ");
-            sb.Append($"'{InserirCidade(endereco.Cidade)}', ");
-            sb.Append($"'{endereco.DataCadastro.ToString("MM/dd/yyyy")}');");
-            sb.Append("SELECT ()");
+            sb.Append($"{InserirCidade(endereco.Cidade)}, ");
+            sb.Append($"'{endereco.DataCadastro.ToString("MM/dd/yyyy hh:mm:ss")}');");
+            sb.Append("SELECT CAST(scope_identity() AS INT)");
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            Console.WriteLine(sb.ToString());
             return Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
         }
 
@@ -55,8 +57,9 @@ namespace Turismo.Repositories
             sb.Append("INSERT INTO Cliente (Nome, Telefone, Id_Endereco, Data_Cadastro) VALUES (");
             sb.Append($"'{cliente.Nome}', ");
             sb.Append($"'{cliente.Telefone}', ");
-            sb.Append($"'{InserirEndereco(cliente.Endereco)}', ");
-            sb.Append($"'{cliente.DataCadastro.ToString("MM/dd/yyyy")}')");
+            sb.Append($"{InserirEndereco(cliente.Endereco)}, ");
+            sb.Append($"'{cliente.DataCadastro.ToString("MM/dd/yyyy hh:mm:ss")}')");
+            sb.Append("SELECT CAST(scope_identity() AS INT)");
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
@@ -68,11 +71,12 @@ namespace Turismo.Repositories
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO Passagem (Id_Origem, Id_Destino, Id_Cliente, Data, Valor) VALUES (");
-            sb.Append($"'{InserirEndereco(passagem.Origem)}', ");
-            sb.Append($"'{InserirEndereco(passagem.Destino)}', ");
-            sb.Append($"'{InserirCliente(passagem.Cliente)}', ");
-            sb.Append($"'{passagem.Data.ToString("MM/dd/yyyy")}', ");
-            sb.Append($"'{passagem.Valor}')");
+            sb.Append($"{InserirEndereco(passagem.Origem)}, ");
+            sb.Append($"{InserirEndereco(passagem.Destino)}, ");
+            sb.Append($"{InserirCliente(passagem.Cliente)}, ");
+            sb.Append($"'{passagem.Data.ToString("MM/dd/yyyy hh:mm:ss")}', ");
+            sb.Append($"{passagem.Valor.ToString(CultureInfo.InvariantCulture)})");
+            sb.Append("SELECT CAST(scope_identity() AS INT)");
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
@@ -85,10 +89,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("INSERT INTO Hotel (Nome, Id_Endereco, Data_Cadastro, Valor) VALUES (");
             sb.Append($"'{hotel.Nome}', ");
-            sb.Append($"'{InserirEndereco(hotel.Endereco)}', ");
-            sb.Append($"'{hotel.DataCadastro.ToString("MM/dd/yyyy")}', ");
-            sb.Append($"'{hotel.Valor}')");
-
+            sb.Append($"{InserirEndereco(hotel.Endereco)}, ");
+            sb.Append($"'{hotel.DataCadastro.ToString("MM/dd/yyyy hh:mm:ss")}', ");
+            sb.Append($"{hotel.Valor.ToString(CultureInfo.InvariantCulture)});");
+            sb.Append("SELECT CAST(scope_identity() AS INT)");
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
 
@@ -119,16 +123,16 @@ namespace Turismo.Repositories
         public void Inserir(Pacote pacote)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente) VALUES ");
-            sb.Append($"'{InserirHotel(pacote.Hotel)}', ");
-            sb.Append($"'{InserirPassagem(pacote.Passagem)}', ");
-            sb.Append($"'{pacote.DataCadastro}', ");
-            sb.Append($"'{pacote.Valor}', ");
-            sb.Append($"'{InserirCliente(pacote.Cliente)}')");
+            sb.Append("INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente) VALUES (");
+            sb.Append($"{InserirHotel(pacote.Hotel)}, ");
+            sb.Append($"{InserirPassagem(pacote.Passagem)}, ");
+            sb.Append($"'{pacote.DataCadastro.ToString("MM/dd/yyyy hh:mm:ss")}', ");
+            sb.Append($"{pacote.Valor.ToString(CultureInfo.InvariantCulture)}, ");
+            sb.Append($"{InserirCliente(pacote.Cliente)})");
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.Execute(sb.ToString(), pacote);
+            db.Execute(sb.ToString());
         }
         /*
         public bool ExecutarDataReader(ref SqlDataReader dr, SqlCommand select, List<Pacote> pacotes)
