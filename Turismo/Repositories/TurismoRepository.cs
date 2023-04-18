@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -134,11 +135,11 @@ namespace Turismo.Repositories
             db.Open();
             db.Execute(sb.ToString());
         }
-        /*
-        public bool ExecutarDataReader(ref SqlDataReader dr, SqlCommand select, List<Pacote> pacotes)
+        
+        public bool ExecutarDataReader(ref IDataReader dr, SqlConnection db, StringBuilder sb, List<Pacote> pacotes)
         {
             int tamanho = pacotes.Count;
-            if (dr.IsClosed) dr = select.ExecuteReader();
+            if (dr.IsClosed) dr = db.ExecuteReader(sb.ToString());
             int contador = 0;
 
             while (contador < tamanho)
@@ -150,17 +151,19 @@ namespace Turismo.Repositories
             return dr.Read();
         }
 
-        public List<Pacote> ListarPacotes()
+        public List<Pacote> FindAll()
         {
             List<Pacote> pacotes = new List<Pacote>();
 
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente FROM Pacote");
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
 
-            while (ExecutarDataReader(ref dr, select, pacotes))
+            IDataReader dr = db.ExecuteReader(sb.ToString());
+
+            while (ExecutarDataReader(ref dr, db, sb, pacotes))
             {
                 Pacote pacote = new Pacote();
 
@@ -187,8 +190,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Nome, Id_Endereco, Data_Cadastro, Valor FROM Hotel WHERE Id = " + id);
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+
+            IDataReader dr = db.ExecuteReader(sb.ToString());
 
             Hotel hotel = new Hotel();
 
@@ -212,8 +217,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Logradouro, Numero, Bairro, CEP, Complemento, Id_Cidade, Data_Cadastro FROM Endereco WHERE Id = " + id);
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+
+            IDataReader dr = db.ExecuteReader(sb.ToString());
 
             Endereco endereco = new Endereco();
 
@@ -240,8 +247,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Nome FROM Cidade WHERE Id = " + id);
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+
+            IDataReader dr = db.ExecuteReader(sb.ToString());
 
             Cidade cidade = new Cidade();
 
@@ -260,8 +269,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Nome, Telefone, Id_Endereco, Data_Cadastro FROM Cliente WHERE Id = " + id);
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+
+            IDataReader dr = db.ExecuteReader(sb.ToString());
 
             Cliente cliente = new Cliente();
 
@@ -285,8 +296,10 @@ namespace Turismo.Repositories
             StringBuilder sb = new StringBuilder();
             sb.Append("SELECT Id, Id_Origem, Id_Destino, Id_Cliente, Data, Valor FROM Passagem WHERE Id = " + id);
 
-            SqlCommand select = new SqlCommand(sb.ToString(), SQLConnection);
-            SqlDataReader dr = select.ExecuteReader();
+            SqlConnection db = new SqlConnection(_connection);
+            db.Open();
+
+            IDataReader dr = db.ExecuteReader(sb.ToString());
 
             Passagem passagem = new Passagem();
 
@@ -307,6 +320,6 @@ namespace Turismo.Repositories
 
             return passagem;
         }
-        */
+        
     }
 }

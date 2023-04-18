@@ -28,5 +28,10 @@ namespace Turismo.Services
         {
             new TurismoRepository().Inserir(pacote);
         }
+
+        public List<Pacote> FindAll()
+        {
+            return new TurismoRepository().FindAll();
+        }
     }
 }
