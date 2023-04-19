@@ -2,6 +2,7 @@
 {
     internal class Passagem
     {
+        public readonly static string INSERT = "INSERT INTO Passagem (Id_Origem, Id_Destino, Id_Cliente, Data, Valor) VALUES (@Origem, @Destino, @Cliente, @Data, @Valor);";
         public int Id { get; set; }
         public Endereco Origem { get; set; }
         public Endereco Destino { get; set; }

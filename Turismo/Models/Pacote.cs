@@ -4,6 +4,7 @@ namespace Turismo.Models
 {
     internal class Pacote
     {
+        public readonly static string INSERT = "INSERT INTO Pacote (Id_Hotel, Id_Passagem, Data_Cadastro, Valor, Id_Cliente) VALUES (@Hotel, @Passagem, @DataCadastro, @Valor, @Cliente);";
         public int Id { get; set; }
         public Hotel Hotel { get; set; }
         public Passagem Passagem { get; set; }

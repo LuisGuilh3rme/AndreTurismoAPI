@@ -2,6 +2,7 @@
 {
     internal class Cliente
     {
+        public static readonly string INSERT = "INSERT INTO Cliente (Nome, Telefone, Id_Endereco, Data_Cadastro) VALUES (@Nome, @Telefone, @Endereco, @DataCadastro);";
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Telefone { get; set; }
