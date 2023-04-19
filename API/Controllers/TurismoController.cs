@@ -1,18 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using API.Models;
-using API.Services;
 
-namespace Turismo.Controllers
+namespace API.Controllers
 {
-    public class TurismoController
+    public class TurismoController : ControllerBase
     {
-        [HttpPost(Name = "Insert")]
         public void Insert(Pacote pacote)
         {
             new TurismoService().Inserir(pacote);
         }
 
-        [HttpGet(Name = "Get")]
         public List<Pacote> FindAll()
         {
             return new TurismoService().FindAll();
