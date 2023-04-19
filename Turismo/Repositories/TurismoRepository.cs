@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Dapper;
 using Turismo.Models;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace Turismo.Repositories
 {

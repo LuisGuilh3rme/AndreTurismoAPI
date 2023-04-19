@@ -1,12 +1,4 @@
-﻿using System.Configuration;
-using System.Data.SqlClient;
-using System.Globalization;
-using System.Net;
-using System.Reflection.Emit;
-using System.Runtime.InteropServices;
-using System.Text;
-using Dapper;
-using Turismo.Models;
+﻿using Turismo.Models;
 using Turismo.Repositories;
 
 namespace Turismo.Services
