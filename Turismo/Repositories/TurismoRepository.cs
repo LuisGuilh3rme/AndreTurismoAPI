@@ -25,8 +25,9 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-
             int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            db.Close();
+
             return id;
         }
 
@@ -45,8 +46,9 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-
             int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            db.Close();
+
             return id;
         }
 
@@ -62,8 +64,9 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-
             int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            db.Close();
+
             return id;
         }
 
@@ -80,8 +83,9 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-
             int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            db.Close();
+
             return id;
         }
 
@@ -96,8 +100,8 @@ namespace Turismo.Repositories
             sb.Append("SELECT CAST(scope_identity() AS INT)");
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-
             int id = Convert.ToInt32(db.ExecuteScalar(sb.ToString()));
+            db.Close();
             return id;
         }
 
@@ -136,10 +140,10 @@ namespace Turismo.Repositories
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
-            db.Close();
-
             db.Execute(sb.ToString());
+            db.Close();
         }
+
         public List<Pacote> FindAll()
         {
             List<Pacote> pacotes = new List<Pacote>();
