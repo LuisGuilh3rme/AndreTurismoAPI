@@ -1,4 +1,7 @@
-﻿namespace API.Services
+﻿using API.Models;
+using API.Repositories;
+
+namespace API.Services
 {
     public class TurismoService
     {
@@ -13,9 +16,9 @@
             new TurismoRepository().RemoverPacote(id);
         }
 
-        public void Inserir(Pacote pacote)
+        public bool Inserir(Pacote pacote)
         {
-            new TurismoRepository().Inserir(pacote);
+            return new TurismoRepository().Inserir(pacote);
         }
 
         public List<Pacote> FindAll()

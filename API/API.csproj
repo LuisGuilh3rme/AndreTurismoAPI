@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\API.Models\API.Models.csproj" />
+    <ProjectReference Include="..\API.Services\API.Services.csproj" />
   </ItemGroup>
 
 </Project>
