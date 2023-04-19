@@ -2,8 +2,6 @@
 {
     internal class Passagem
     {
-        public readonly static string INSERT = "INSERT INTO Passagem (Id_Origem, Id_Destino, Id_Cliente, Data, Valor) VALUES (@Id_Origem, @Id_Destino, @Id_Cliente, @Data, @Valor)";
-        public readonly static string GETALL = "SELECT * FROM Passagem";
         public int Id { get; set; }
         public Endereco Origem { get; set; }
         public Endereco Destino { get; set; }

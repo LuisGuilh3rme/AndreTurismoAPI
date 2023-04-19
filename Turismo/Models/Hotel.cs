@@ -4,8 +4,6 @@ namespace Turismo.Models
 {
     internal class Hotel
     {
-        public readonly static string INSERT = "INSERT INTO Hotel (Nome, Id_Endereco, Data_Cadastro, Valor) VALUES (@Nome, @Id_Endereco, @Data_Cadastro, @Valor)";
-        public readonly static string GETALL = "SELECT * FROM Hotel";
         public int Id { get; set; }
         public string Nome { get; set; }
         public Endereco Endereco { get; set; }
