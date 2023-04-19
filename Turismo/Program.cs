@@ -3,7 +3,7 @@ using Turismo.Controllers;
 using Turismo.Models;
 using Turismo.Services;
 
-internal class Program
+public class Program
 {
     private static void Main(string[] args)
     {

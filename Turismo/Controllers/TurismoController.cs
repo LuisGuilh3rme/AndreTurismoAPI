@@ -3,7 +3,7 @@ using Turismo.Services;
 
 namespace Turismo.Controllers
 {
-    internal class TurismoController
+    public class TurismoController
     {
         public void Insert(Pacote pacote)
         {

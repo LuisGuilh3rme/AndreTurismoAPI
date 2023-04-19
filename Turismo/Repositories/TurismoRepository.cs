@@ -8,7 +8,7 @@ using Turismo.Models;
 
 namespace Turismo.Repositories
 {
-    internal class TurismoRepository : ITurismoRepository
+    public class TurismoRepository : ITurismoRepository
     {
         private readonly string _identity = "SELECT CAST(scope_identity() AS INT)";
         private string _connection { get; set; }

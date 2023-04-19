@@ -2,7 +2,7 @@
 
 namespace Turismo.Repositories
 {
-    internal interface ITurismoRepository
+    public interface ITurismoRepository
     {
         int InserirCidade(Cidade cidade);
         int InserirEndereco(Endereco endereco);

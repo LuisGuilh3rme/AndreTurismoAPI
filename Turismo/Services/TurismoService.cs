@@ -3,7 +3,7 @@ using Turismo.Repositories;
 
 namespace Turismo.Services
 {
-    internal class TurismoService
+    public class TurismoService
     {
 
         public void AtualizarCampo(int id, string tabela, string campo, string atualizarString)
