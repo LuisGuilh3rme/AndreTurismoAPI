@@ -12,11 +12,11 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PassagemsController : ControllerBase
+    public class PassagensController : ControllerBase
     {
         private readonly APIContext _context;
 
-        public PassagemsController(APIContext context)
+        public PassagensController(APIContext context)
         {
             _context = context;
         }

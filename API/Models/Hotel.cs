@@ -4,7 +4,6 @@ namespace API
 {
     public class Hotel
     {
-        public readonly static string INSERT = "INSERT INTO Hotel (Nome, Id_Endereco, Data_Cadastro, Valor) VALUES (@Nome, @Endereco, @DataCadastro, @Valor);";
         public int Id { get; set; }
         public string Nome { get; set; }
         public Endereco Endereco { get; set; }
