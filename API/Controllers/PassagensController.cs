@@ -25,10 +25,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Passagem>>> GetPassagem()
         {
-          if (_context.Passagem == null)
-          {
-              return NotFound();
-          }
+            if (_context.Passagem == null)
+            {
+                return NotFound();
+            }
             return await _context.Passagem.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Passagem>> GetPassagem(int id)
         {
-          if (_context.Passagem == null)
-          {
-              return NotFound();
-          }
+            if (_context.Passagem == null)
+            {
+                return NotFound();
+            }
             var passagem = await _context.Passagem.FindAsync(id);
 
             if (passagem == null)
@@ -86,11 +86,19 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Passagem>> PostPassagem(Passagem passagem)
         {
-          if (_context.Passagem == null)
-          {
-              return Problem("Entity set 'APIContext.Passagem'  is null.");
-          }
-            _context.Passagem.Add(passagem);
+            if (_context.Passagem == null)
+            {
+                return Problem("Entity set 'APIContext.Passagem'  is null.");
+            }
+            {
+                var res = await _context.Passagem.FirstOrDefaultAsync(p => p.Id == passagem.Id);
+                if (res != null) passagem = res;
+                else
+                {
+                    passagem.Id = 0;
+                    _context.Passagem.Add(passagem);
+                }
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPassagem", new { id = passagem.Id }, passagem);
