@@ -25,10 +25,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> GetHotel()
         {
-          if (_context.Hotel == null)
-          {
-              return NotFound();
-          }
+            if (_context.Hotel == null)
+            {
+                return NotFound();
+            }
             return await _context.Hotel.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Hotel>> GetHotel(int id)
         {
-          if (_context.Hotel == null)
-          {
-              return NotFound();
-          }
+            if (_context.Hotel == null)
+            {
+                return NotFound();
+            }
             var hotel = await _context.Hotel.FindAsync(id);
 
             if (hotel == null)
@@ -86,11 +86,21 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Hotel>> PostHotel(Hotel hotel)
         {
-          if (_context.Hotel == null)
-          {
-              return Problem("Entity set 'APIContext.Hotel'  is null.");
-          }
-            _context.Hotel.Add(hotel);
+            if (_context.Hotel == null)
+            {
+                return Problem("Entity set 'APIContext.Hotel'  is null.");
+            }
+
+            {
+                var res = await _context.Hotel.FirstOrDefaultAsync(h => h.Id == hotel.Id);
+                if (res != null) hotel = res;
+                else
+                {
+                    hotel.Id = 0;
+                    _context.Hotel.Add(hotel);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetHotel", new { id = hotel.Id }, hotel);
