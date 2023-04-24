@@ -19,10 +19,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
         {
-          if (_context.Cliente == null)
-          {
-              return NotFound();
-          }
+            if (_context.Cliente == null)
+            {
+                return NotFound();
+            }
             return await _context.Cliente.ToListAsync();
         }
 
@@ -30,10 +30,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Cliente>> GetCliente(int id)
         {
-          if (_context.Cliente == null)
-          {
-              return NotFound();
-          }
+            if (_context.Cliente == null)
+            {
+                return NotFound();
+            }
             var cliente = await _context.Cliente.FindAsync(id);
 
             if (cliente == null)
@@ -80,11 +80,21 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
         {
-          if (_context.Cliente == null)
-          {
-              return Problem("Entity set 'APIContext.Cliente'  is null.");
-          }
-            _context.Cliente.Add(cliente);
+            if (_context.Cliente == null)
+            {
+                return Problem("Entity set 'APIContext.Cliente'  is null.");
+            }
+
+            {
+                var res = await _context.Cliente.FirstOrDefaultAsync(c => c.Id == cliente.Id);
+                if (res != null) cliente = res;
+                else
+                {
+                    cliente.Id = 0;
+                    _context.Cliente.Add(cliente);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCliente", new { id = cliente.Id }, cliente);
