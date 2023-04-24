@@ -25,10 +25,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Endereco>>> GetEndereco()
         {
-          if (_context.Endereco == null)
-          {
-              return NotFound();
-          }
+            if (_context.Endereco == null)
+            {
+                return NotFound();
+            }
             return await _context.Endereco.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Endereco>> GetEndereco(int id)
         {
-          if (_context.Endereco == null)
-          {
-              return NotFound();
-          }
+            if (_context.Endereco == null)
+            {
+                return NotFound();
+            }
             var endereco = await _context.Endereco.FindAsync(id);
 
             if (endereco == null)
@@ -86,11 +86,19 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Endereco>> PostEndereco(Endereco endereco)
         {
-          if (_context.Endereco == null)
-          {
-              return Problem("Entity set 'APIContext.Endereco'  is null.");
-          }
-            _context.Endereco.Add(endereco);
+            if (_context.Endereco == null)
+            {
+                return Problem("Entity set 'APIContext.Endereco'  is null.");
+            }
+            {
+                var res = await _context.Endereco.FirstOrDefaultAsync(e => e.Id == endereco.Id);
+                if (res != null) endereco = res;
+                else
+                {
+                    endereco.Id = 0;
+                    _context.Endereco.Add(endereco);
+                }
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEndereco", new { id = endereco.Id }, endereco);
