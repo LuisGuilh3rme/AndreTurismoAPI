@@ -25,10 +25,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Pacote>>> GetPacote()
         {
-          if (_context.Pacote == null)
-          {
-              return NotFound();
-          }
+            if (_context.Pacote == null)
+            {
+                return NotFound();
+            }
             return await _context.Pacote.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Pacote>> GetPacote(int id)
         {
-          if (_context.Pacote == null)
-          {
-              return NotFound();
-          }
+            if (_context.Pacote == null)
+            {
+                return NotFound();
+            }
             var pacote = await _context.Pacote.FindAsync(id);
 
             if (pacote == null)
@@ -86,11 +86,19 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Pacote>> PostPacote(Pacote pacote)
         {
-          if (_context.Pacote == null)
-          {
-              return Problem("Entity set 'APIContext.Pacote'  is null.");
-          }
-            _context.Pacote.Add(pacote);
+            if (_context.Pacote == null)
+            {
+                return Problem("Entity set 'APIContext.Pacote'  is null.");
+            }
+            {
+                var res = await _context.Pacote.FirstOrDefaultAsync(p => p.Id == pacote.Id);
+                if (res != null) pacote = res;
+                else
+                {
+                    pacote.Id = 0;
+                    _context.Pacote.Add(pacote);
+                }
+            }
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPacote", new { id = pacote.Id }, pacote);
