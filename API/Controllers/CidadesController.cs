@@ -25,10 +25,10 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cidade>>> GetCidade()
         {
-          if (_context.Cidade == null)
-          {
-              return NotFound();
-          }
+            if (_context.Cidade == null)
+            {
+                return NotFound();
+            }
             return await _context.Cidade.ToListAsync();
         }
 
@@ -36,10 +36,10 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Cidade>> GetCidade(int id)
         {
-          if (_context.Cidade == null)
-          {
-              return NotFound();
-          }
+            if (_context.Cidade == null)
+            {
+                return NotFound();
+            }
             var cidade = await _context.Cidade.FindAsync(id);
 
             if (cidade == null)
@@ -86,11 +86,21 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Cidade>> PostCidade(Cidade cidade)
         {
-          if (_context.Cidade == null)
-          {
-              return Problem("Entity set 'APIContext.Cidade'  is null.");
-          }
-            _context.Cidade.Add(cidade);
+            if (_context.Cidade == null)
+            {
+                return Problem("Entity set 'APIContext.Cidade'  is null.");
+            }
+
+            {
+                var res = await _context.Cidade.FirstOrDefaultAsync(c => c.Id == cidade.Id);
+                if (res != null) cidade = res;
+                else
+                {
+                    cidade.Id = 0;
+                    _context.Cidade.Add(cidade);
+                }
+            }
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCidade", new { id = cidade.Id }, cidade);
