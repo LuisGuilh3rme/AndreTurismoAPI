@@ -43,8 +43,7 @@ namespace API.Migrations
                         name: "FK_Endereco_Cidade_CidadeId",
                         column: x => x.CidadeId,
                         principalTable: "Cidade",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -65,8 +64,7 @@ namespace API.Migrations
                         name: "FK_Cliente_Endereco_EnderecoId",
                         column: x => x.EnderecoId,
                         principalTable: "Endereco",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -87,8 +85,7 @@ namespace API.Migrations
                         name: "FK_Hotel_Endereco_EnderecoId",
                         column: x => x.EnderecoId,
                         principalTable: "Endereco",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -110,20 +107,17 @@ namespace API.Migrations
                         name: "FK_Passagem_Cliente_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Cliente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Passagem_Endereco_DestinoId",
                         column: x => x.DestinoId,
                         principalTable: "Endereco",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Passagem_Endereco_OrigemId",
                         column: x => x.OrigemId,
                         principalTable: "Endereco",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -145,66 +139,72 @@ namespace API.Migrations
                         name: "FK_Pacote_Cliente_ClienteId",
                         column: x => x.ClienteId,
                         principalTable: "Cliente",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Pacote_Hotel_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotel",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Pacote_Passagem_PassagemId",
                         column: x => x.PassagemId,
                         principalTable: "Passagem",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cliente_EnderecoId",
                 table: "Cliente",
-                column: "EnderecoId");
+                column: "EnderecoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Endereco_CidadeId",
                 table: "Endereco",
-                column: "CidadeId");
+                column: "CidadeId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Hotel_EnderecoId",
                 table: "Hotel",
-                column: "EnderecoId");
+                column: "EnderecoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacote_ClienteId",
                 table: "Pacote",
-                column: "ClienteId");
+                column: "ClienteId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacote_HotelId",
                 table: "Pacote",
-                column: "HotelId");
+                column: "HotelId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Pacote_PassagemId",
                 table: "Pacote",
-                column: "PassagemId");
+                column: "PassagemId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Passagem_ClienteId",
                 table: "Passagem",
-                column: "ClienteId");
+                column: "ClienteId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Passagem_DestinoId",
                 table: "Passagem",
-                column: "DestinoId");
+                column: "DestinoId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Passagem_OrigemId",
                 table: "Passagem",
-                column: "OrigemId");
+                column: "OrigemId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

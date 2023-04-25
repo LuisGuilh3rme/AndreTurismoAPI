@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(APIContext))]
-    [Migration("20230422164743_InitialCreate")]
+    [Migration("20230425180500_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,7 +65,8 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnderecoId");
+                    b.HasIndex("EnderecoId")
+                        .IsUnique();
 
                     b.ToTable("Cliente");
                 });
@@ -105,7 +106,8 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CidadeId");
+                    b.HasIndex("CidadeId")
+                        .IsUnique();
 
                     b.ToTable("Endereco");
                 });
@@ -133,7 +135,8 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EnderecoId");
+                    b.HasIndex("EnderecoId")
+                        .IsUnique();
 
                     b.ToTable("Hotel");
                 });
@@ -163,11 +166,14 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ClienteId")
+                        .IsUnique();
 
-                    b.HasIndex("HotelId");
+                    b.HasIndex("HotelId")
+                        .IsUnique();
 
-                    b.HasIndex("PassagemId");
+                    b.HasIndex("PassagemId")
+                        .IsUnique();
 
                     b.ToTable("Pacote");
                 });
@@ -197,11 +203,14 @@ namespace API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ClienteId")
+                        .IsUnique();
 
-                    b.HasIndex("DestinoId");
+                    b.HasIndex("DestinoId")
+                        .IsUnique();
 
-                    b.HasIndex("OrigemId");
+                    b.HasIndex("OrigemId")
+                        .IsUnique();
 
                     b.ToTable("Passagem");
                 });
@@ -209,9 +218,9 @@ namespace API.Migrations
             modelBuilder.Entity("API.Cliente", b =>
                 {
                     b.HasOne("API.Endereco", "Endereco")
-                        .WithMany()
-                        .HasForeignKey("EnderecoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Cliente", "EnderecoId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Endereco");
@@ -220,9 +229,9 @@ namespace API.Migrations
             modelBuilder.Entity("API.Endereco", b =>
                 {
                     b.HasOne("API.Cidade", "Cidade")
-                        .WithMany()
-                        .HasForeignKey("CidadeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Endereco", "CidadeId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cidade");
@@ -231,9 +240,9 @@ namespace API.Migrations
             modelBuilder.Entity("API.Hotel", b =>
                 {
                     b.HasOne("API.Endereco", "Endereco")
-                        .WithMany()
-                        .HasForeignKey("EnderecoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Hotel", "EnderecoId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Endereco");
@@ -242,21 +251,21 @@ namespace API.Migrations
             modelBuilder.Entity("API.Pacote", b =>
                 {
                     b.HasOne("API.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Pacote", "ClienteId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("API.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Pacote", "HotelId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("API.Passagem", "Passagem")
-                        .WithMany()
-                        .HasForeignKey("PassagemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Pacote", "PassagemId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cliente");
@@ -269,21 +278,21 @@ namespace API.Migrations
             modelBuilder.Entity("API.Passagem", b =>
                 {
                     b.HasOne("API.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Passagem", "ClienteId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("API.Endereco", "Destino")
-                        .WithMany()
-                        .HasForeignKey("DestinoId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Passagem", "DestinoId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("API.Endereco", "Origem")
-                        .WithMany()
-                        .HasForeignKey("OrigemId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne()
+                        .HasForeignKey("API.Passagem", "OrigemId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Cliente");

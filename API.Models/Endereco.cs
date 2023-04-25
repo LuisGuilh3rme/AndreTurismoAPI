@@ -1,4 +1,6 @@
-﻿namespace API.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace API.Models
 {
     public class Endereco
     {
@@ -9,6 +11,7 @@
         public string Bairro { get; set; }
         public string CEP { get; set; }
         public string Complemento { get; set; }
+        [ForeignKey("Fk_Endereco_Cidade")]
         public Cidade Cidade { get; set; }
         public DateTime DataCadastro { get; set; }
 
