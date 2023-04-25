@@ -197,12 +197,12 @@ internal class Program
 
             case 2:
                 Console.WriteLine("Atual: " + pacote.DataCadastro);
-                Console.WriteLine("Atualizar data de cadastro: ");
+                Console.WriteLine("Atualizar data de cadastro (mes/dia/ano): ");
                 break;
 
             case 3:
                 Console.WriteLine("Atual: " + pacote.Valor);
-                Console.WriteLine("Atualizar data de cadastro: ");
+                Console.WriteLine("Atualizar data de cadastro (mes/dia/ano): ");
                 break;
 
             case 4:
@@ -253,7 +253,7 @@ internal class Program
 
             case 3:
                 Console.WriteLine("Atual: " + cliente.DataCadastro);
-                Console.WriteLine("Atualizar data de cadastro: ");
+                Console.WriteLine("Atualizar data de cadastro (mes/dia/ano): ");
                 break;
         }
 
@@ -299,7 +299,7 @@ internal class Program
 
             case 3:
                 Console.WriteLine("Atual: " + passagem.Data);
-                Console.WriteLine("Atualizar data de viagem: ");
+                Console.WriteLine("Atualizar data de viagem (mes/dia/ano): ");
                 break;
 
             case 4:
@@ -346,7 +346,7 @@ internal class Program
 
             case 2:
                 Console.WriteLine("Atual: " + hotel.DataCadastro);
-                Console.WriteLine("Atualizar Valor: ");
+                Console.WriteLine("Atualizar data de cadastro (mes/dia/ano): ");
                 break;
 
             case 3:
@@ -407,13 +407,13 @@ internal class Program
                 break;
 
             case 5:
-                Console.WriteLine("Atual: " + endereco.Cidade);
-                Console.WriteLine("Atualizar Complemento: ");
+                Console.WriteLine("Atual: " + endereco.Cidade.Nome);
+                Console.WriteLine("Atualizar Nome cidade: ");
                 break;
 
             case 6:
                 Console.WriteLine("Atual: " + endereco.DataCadastro);
-                Console.WriteLine("Atualizar Data de cadastro: ");
+                Console.WriteLine("Atualizar Data de cadastro(mes/dia/ano): ");
                 break;
         }
 

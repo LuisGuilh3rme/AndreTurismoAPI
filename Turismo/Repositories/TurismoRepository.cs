@@ -89,11 +89,12 @@ namespace Turismo.Repositories
             return id;
         }
 
-        public void AtualizarCampo(int id, string tabela, string campo, string atualizarString)
+        public void AtualizarCampo(int id, string tabela, string campo, string valor)
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"UPDATE {tabela} SET {campo} = '{atualizarString}' WHERE Id = {id}");
+            if (campo == "Cidade") sb.Append($"UPDATE Cidade SET Nome = '{valor}' WHERE Id = {id}");
+            else sb.Append($"UPDATE {tabela} SET {campo} = '{valor}' WHERE Id = {id}");
 
             SqlConnection db = new SqlConnection(_connection);
             db.Open();
